@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Automation of Arrogance — A 2029 Retrospective</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,600;1,6..72,300;1,6..72,400;1,6..72,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --void: #080c10;
+    --carbon: #0f1419;
+    --slate: #1a2332;
+    --steel: #253347;
+    --fog: #8899aa;
+    --mist: #aabbc8;
+    --ice: #ddeeff;
+    --paper: #f0f4f8;
+    --red: #e63946;
+    --amber: #f4a234;
+    --green: #2ec4b6;
+    --rule: rgba(255,255,255,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--void);
+    color: var(--mist);
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.75;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* FUTURE DATESTAMP BANNER */
+  .time-banner {
+    background: var(--red);
+    color: white;
+    text-align: center;
+    padding: 10px 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 10;
+  }
+
+  .time-banner span {
+    opacity: 0.7;
+    margin: 0 16px;
+  }
+
+  /* MASTHEAD */
+  .masthead {
+    background: var(--carbon);
+    border-bottom: 1px solid var(--rule);
+    padding: 16px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+  }
+
+  .pub-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.15em;
+    color: var(--ice);
+  }
+
+  .pub-tagline {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--fog);
+    text-transform: uppercase;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    background: var(--carbon);
+    border-bottom: 1px solid var(--rule);
+    padding: 80px 40px 64px;
+    overflow: hidden;
+  }
+
+  .hero::after {
+    content: '2029';
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(120px, 20vw, 280px);
+    color: rgba(255,255,255,0.02);
+    letter-spacing: -0.05em;
+    pointer-events: none;
+    line-height: 1;
+  }
+
+  .hero-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  .kicker-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--amber);
+    border: 1px solid rgba(244,162,52,0.3);
+    padding: 4px 12px;
+  }
+
+  .kicker-retro {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--fog);
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.8rem, 6vw, 5.5rem);
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+    color: var(--ice);
+    margin-bottom: 28px;
+  }
+
+  h1 em {
+    color: var(--red);
+    font-style: normal;
+  }
+
+  .deck {
+    font-family: 'Newsreader', serif;
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--fog);
+    line-height: 1.6;
+    max-width: 680px;
+    margin-bottom: 36px;
+    font-weight: 300;
+  }
+
+  .byline-row {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--rule);
+    padding-top: 20px;
+  }
+
+  .byline {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--fog);
+    text-transform: uppercase;
+  }
+
+  .byline strong {
+    color: var(--mist);
+  }
+
+  /* SCOREBOARD — the market data then vs now */
+  .scoreboard {
+    background: var(--slate);
+    border: 1px solid var(--rule);
+    border-top: 3px solid var(--red);
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 36px 40px;
+  }
+
+  .scoreboard-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 24px;
+  }
+
+  .score-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 24px;
+  }
+
+  .score-item {
+    border-left: 2px solid var(--rule);
+    padding-left: 16px;
+  }
+
+  .score-item .metric {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fog);
+    margin-bottom: 6px;
+  }
+
+  .score-item .value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .score-item .value.up { color: var(--green); }
+  .score-item .value.down { color: var(--red); }
+  .score-item .value.neutral { color: var(--mist); }
+
+  .score-item .context {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--fog);
+    line-height: 1.5;
+  }
+
+  /* ARTICLE BODY */
+  .article-body {
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 64px 40px 80px;
+    position: relative;
+    z-index: 2;
+  }
+
+  p {
+    margin-bottom: 1.6em;
+    color: var(--mist);
+  }
+
+  .drop-cap::first-letter {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 5rem;
+    float: left;
+    line-height: 0.8;
+    margin-right: 12px;
+    margin-top: 10px;
+    color: var(--red);
+  }
+
+  /* Section headers */
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 8px;
+    margin-top: 56px;
+  }
+
+  h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem;
+    letter-spacing: 0.05em;
+    color: var(--ice);
+    margin-bottom: 24px;
+    line-height: 1.1;
+  }
+
+  /* Pull quote */
+  .pull-quote {
+    border-left: 3px solid var(--red);
+    margin: 48px 0;
+    padding: 4px 0 4px 28px;
+  }
+
+  .pull-quote p {
+    font-family: 'Newsreader', serif;
+    font-size: 1.45rem;
+    font-style: italic;
+    color: var(--ice);
+    line-height: 1.35;
+    font-weight: 300;
+    margin-bottom: 12px;
+  }
+
+  .pull-quote cite {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--fog);
+    font-style: normal;
+  }
+
+  /* Timeline */
+  .timeline {
+    margin: 48px 0;
+    position: relative;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 22px;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--red), var(--amber), var(--green));
+  }
+
+  .tl-item {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 32px;
+    align-items: flex-start;
+  }
+
+  .tl-dot {
+    width: 45px;
+    min-width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    position: relative;
+    z-index: 2;
+  }
+
+  .tl-dot.past { background: var(--slate); border: 2px solid var(--red); color: var(--red); }
+  .tl-dot.mid { background: var(--slate); border: 2px solid var(--amber); color: var(--amber); }
+  .tl-dot.now { background: var(--red); border: 2px solid var(--red); color: white; }
+  .tl-dot.future { background: var(--slate); border: 2px solid var(--green); color: var(--green); }
+
+  .tl-content {
+    padding-top: 8px;
+  }
+
+  .tl-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fog);
+    margin-bottom: 4px;
+  }
+
+  .tl-title {
+    font-family: 'Newsreader', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--ice);
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+
+  .tl-body {
+    font-size: 0.9rem;
+    color: var(--fog);
+    line-height: 1.65;
+    margin-bottom: 0;
+  }
+
+  /* Stat callout */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2px;
+    margin: 40px 0;
+    background: var(--rule);
+  }
+
+  .stat-cell {
+    background: var(--carbon);
+    padding: 24px 28px;
+  }
+
+  .stat-cell .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    line-height: 1;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .stat-cell .stat-num.red { color: var(--red); }
+  .stat-cell .stat-num.amber { color: var(--amber); }
+  .stat-cell .stat-num.green { color: var(--green); }
+
+  .stat-cell .stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fog);
+    line-height: 1.5;
+  }
+
+  /* Blockquote — sourced */
+  .source-quote {
+    background: var(--carbon);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--amber);
+    padding: 24px 28px;
+    margin: 36px 0;
+  }
+
+  .source-quote p {
+    font-style: italic;
+    color: var(--mist);
+    margin-bottom: 10px;
+    font-size: 1rem;
+  }
+
+  .source-quote .attribution {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--amber);
+  }
+
+  /* The competitors box */
+  .competitor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin: 36px 0;
+  }
+
+  .comp-card {
+    background: var(--carbon);
+    border: 1px solid var(--rule);
+    padding: 20px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .comp-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .comp-card.winner::before { background: var(--green); }
+  .comp-card.rising::before { background: var(--amber); }
+  .comp-card.loser::before { background: var(--red); }
+
+  .comp-card .comp-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.08em;
+    color: var(--ice);
+    margin-bottom: 4px;
+  }
+
+  .comp-card .comp-status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .comp-card.winner .comp-status { color: var(--green); }
+  .comp-card.rising .comp-status { color: var(--amber); }
+  .comp-card.loser .comp-status { color: var(--red); }
+
+  .comp-card p {
+    font-size: 0.85rem;
+    color: var(--fog);
+    line-height: 1.55;
+    margin-bottom: 0;
+  }
+
+  /* The series link box */
+  .series-cta {
+    background: linear-gradient(135deg, var(--slate) 0%, var(--carbon) 100%);
+    border: 1px solid rgba(221,238,255,0.1);
+    border-top: 3px solid var(--amber);
+    padding: 44px 48px;
+    margin: 64px 0 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .series-cta::after {
+    content: '→';
+    position: absolute;
+    right: 32px;
+    bottom: 24px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 6rem;
+    color: rgba(244,162,52,0.06);
+    line-height: 1;
+  }
+
+  .series-cta .cta-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 14px;
+  }
+
+  .series-cta h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.9rem;
+    letter-spacing: 0.05em;
+    color: var(--ice);
+    margin-bottom: 14px;
+    line-height: 1.1;
+  }
+
+  .series-cta p {
+    font-size: 0.95rem;
+    color: var(--fog);
+    max-width: 560px;
+    margin-bottom: 28px;
+    line-height: 1.65;
+  }
+
+  .series-parts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .series-part {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--rule);
+    padding: 14px 16px;
+  }
+
+  .series-part .part-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22px;
+    color: rgba(244,162,52,0.25);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .series-part .part-title {
+    font-family: 'Newsreader', serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--mist);
+    display: block;
+    margin-bottom: 4px;
+    line-height: 1.2;
+  }
+
+  .series-part .part-desc {
+    font-size: 0.78rem;
+    color: var(--fog);
+    line-height: 1.4;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.03em;
+  }
+
+  .cta-button {
+    display: inline-block;
+    background: var(--amber);
+    color: var(--void);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 14px 28px;
+    text-decoration: none;
+    transition: background 0.2s;
+    cursor: pointer;
+  }
+
+  .cta-button:hover { background: var(--ice); }
+
+  /* Rule */
+  hr {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 48px 0;
+  }
+
+  /* Note on fictional framing */
+  .fiction-note {
+    background: rgba(244,162,52,0.06);
+    border: 1px solid rgba(244,162,52,0.2);
+    padding: 16px 20px;
+    margin: 32px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--amber);
+    line-height: 1.65;
+    text-transform: uppercase;
+  }
+
+  /* Footer */
+  footer {
+    background: var(--carbon);
+    border-top: 1px solid var(--rule);
+    padding: 28px 40px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--fog);
+    text-transform: uppercase;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .masthead { padding: 14px 20px; }
+    .hero { padding: 48px 20px 40px; }
+    .article-body { padding: 40px 20px 60px; }
+    .series-cta { padding: 28px 24px; }
+    .scoreboard { padding: 24px 20px; }
+    h1 { font-size: 2.4rem; }
+  }
+
+  /* Fade-in animation */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-inner { animation: fadeUp 0.8s ease both; }
+  .scoreboard { animation: fadeUp 0.8s 0.2s ease both; }
+</style>
+</head>
+<body>
+
+<!-- Future date banner -->
+<div class="time-banner">
+  ◈ Speculative Retrospective <span>·</span> Dateline: March 2029 <span>·</span> Written From Three Years Forward <span>·</span> Based on Real Events of February 2026 ◈
+</div>
+
+<!-- Masthead -->
+<div class="masthead">
+  <div class="pub-name">SIGNAL/LOSS</div>
+  <div class="pub-tagline">Business &amp; Technology Analysis &nbsp;·&nbsp; March 2029</div>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="kicker-row">
+      <div class="kicker">Cover Story</div>
+      <div class="kicker-retro">Fintech &nbsp;·&nbsp; AI Strategy &nbsp;·&nbsp; The Block Autopsy</div>
+    </div>
+
+    <h1>The Automation<br>of <em>Arrogance</em></h1>
+
+    <div style="margin-bottom: 28px;">
+      <span style="font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.2rem, 2.5vw, 1.7rem); letter-spacing: 0.12em; color: var(--amber); text-transform: uppercase;">Bad Ideas Don't Get Better With Automation</span>
+    </div>
+
+    <p class="deck">In February 2026, Block's CEO announced a formula: 100 people plus AI equals 1,000 people. Wall Street celebrated. Boardrooms salivated. Workforces trembled. Three years later, we can see what the formula actually proved — and it wasn't what anyone in that boardroom expected.</p>
+
+    <div class="byline-row">
+      <div class="byline"><strong>By [Author]</strong></div>
+      <div class="byline">March 14, 2029</div>
+      <div class="byline">7 min read</div>
+      <div class="byline" style="color: var(--amber);">★ Editor's Pick</div>
+    </div>
+  </div>
+</div>
+
+<!-- Scoreboard -->
+<div class="scoreboard">
+  <div class="scoreboard-label">The Ledger — Block Then vs. Now</div>
+  <div class="score-grid">
+    <div class="score-item">
+      <div class="metric">Stock, Feb 27 2026</div>
+      <div class="value up">+24%</div>
+      <div class="context">Single-day surge on layoff announcement. Market rewarded the efficiency signal immediately.</div>
+    </div>
+    <div class="score-item">
+      <div class="metric">Stock, March 2029</div>
+      <div class="value down">−38%</div>
+      <div class="context">From the post-layoff peak. Innovation drought priced in. Competitors' product velocity now visible in market share data.</div>
+    </div>
+    <div class="score-item">
+      <div class="metric">Engineers Departed</div>
+      <div class="value down">~1,400</div>
+      <div class="context">Estimated judgment-layer talent who took severance and landed at Stripe, Chime, and three now-notable fintech startups.</div>
+    </div>
+    <div class="score-item">
+      <div class="metric">Competing Products Launched</div>
+      <div class="value amber">31</div>
+      <div class="context">Significant new fintech products launched by Block's direct competitors in the 30 months following the layoffs.</div>
+    </div>
+  </div>
+  <div style="margin-top:16px; font-family: 'JetBrains Mono', monospace; font-size:9px; color: var(--fog); letter-spacing:0.15em; text-transform:uppercase;">
+    ⚠ Note: Stock figures and competitor counts in this retrospective are illustrative projections for narrative purposes. See fiction note below.
+  </div>
+</div>
+
+<!-- Fiction note -->
+<div class="article-body">
+<div class="fiction-note">
+  Editorial Note — This article is a speculative retrospective: a journalistic exercise written in 2026 as if from 2029, using the real events of Block's February 2026 layoff announcement as its foundation. All references to post-2026 events, figures, and outcomes are fictional projections designed to illustrate a real strategic argument. The events of February 2026 — the layoffs, the Dorsey formula, the stock surge — are documented fact.
+</div>
+
+<p class="drop-cap">Three years ago, in February 2026, Jack Dorsey — then CEO of Block — stated an astonishing business labor formula: 100 people plus AI equals 1,000 people. Wall Street celebrated. Boardrooms salivated. And workforces trembled in fear. What appeared to be a brilliant way forward unfortunately masked a trove of problems. What Dorsey has spent the last three years proving is that AI can't solve problems — but it's pretty good at automating them.</p>
+
+<p>Before we go further, let's acknowledge what was actually true in February 2026: Block had overhired through the pandemic years, as had most of the tech industry. The financial correction was real and justified. Most companies making similar moves called it what it was — a post-pandemic restructuring, painful but honest. Dorsey called it AI. And that choice of framing deserves more scrutiny than it received.</p>
+
+<p>Start with the formula itself. Real quantitative models — the kind that get stress-tested by economists, reviewed by independent analysts, and stress-tested against historical data — do not produce round numbers. They produce results like 65 people equals 847 productivity units under specific operational conditions, with a confidence interval and a list of assumptions attached. Messy numbers, because reality is messy. A clean 10x multiplier — exactly 100 becoming exactly 1,000 — is not the output of rigorous analysis. It is a talking point. It is a number engineered to survive a news cycle, not a peer review. No methodology was published. No independent economists vetted it. No confidence intervals were offered. The formula appeared, fully formed, in a company-wide memo, attributed to a man whose most celebrated creation — Twitter — was a genuinely revolutionary platform that was, for most of its existence, famously and chronically unprofitable.</p>
+
+<p>This matters. Dorsey is a visionary product thinker. He is not a quantitative economist and has never claimed to be. But a formula that purports to describe the future productivity of thousands of human workers deserves the rigor we would apply to any other claim of that magnitude. Nobody in that boardroom apparently asked: <em>how was this derived? What does the data show? What are the conditions under which 100 becomes 1,000 rather than 100 becoming 200?</em> The questions were not asked. The formula was not tested. The layoffs were announced. The stock surged 24 percent in a single afternoon. And a very specific group of people — the ones holding equity, not the ones holding severance checks — had an exceptionally good day.</p>
+
+<p>Time will vet the formula. It always does. In the meantime, the investors got their bonus. The question the next three years will answer is who paid for it.</p>
+
+<div class="pull-quote">
+  <p>"AI can't solve problems. But it's pretty good at automating them."</p>
+</div>
+
+<div class="section-label">The Window Opens</div>
+<h2>What Everyone Else Did While Block Was Optimizing</h2>
+
+<p>The hiring that followed was aggressive, targeted, and, from the outside, almost surgical. Stripe, Chime, Klarna, and a cluster of well-funded startups didn't recruit generically. They recruited specifically — former Block product leads, engineers who had built Cash App's core infrastructure, designers who knew Square's merchant product from the inside. The pitch was simple: <em>bring your ideas, we'll build them.</em></p>
+
+<div class="competitor-grid">
+  <div class="comp-card winner">
+    <div class="comp-name">Stripe</div>
+    <div class="comp-status">∆ Accelerating</div>
+    <p>Launched an embedded financial services suite in Q3 2027 — described by analysts as the product Square should have built three years earlier. Recruited heavily from Block's departed talent pool.</p>
+  </div>
+  <div class="comp-card winner">
+    <div class="comp-name">Chime</div>
+    <div class="comp-status">∆ Accelerating</div>
+    <p>Expanded into business banking in 2027, directly targeting Square's core merchant segment. Two former Block product directors led the launch.</p>
+  </div>
+  <div class="comp-card rising">
+    <div class="comp-name">Relay Financial</div>
+    <div class="comp-status">◈ IPO — March 2029</div>
+    <p>Founded in 2026 by former Block engineers and product managers. Went public last month. By 2028 had captured meaningful share of Block's small-business banking segment — built entirely on products its founders had been imagining while still at Block.</p>
+  </div>
+  <div class="comp-card rising">
+    <div class="comp-name">Klarna</div>
+    <div class="comp-status">◈ Emerging</div>
+    <p>Aggressive US expansion through 2027–2028 targeted Afterpay's merchant relationships directly, exploiting a product development gap Block's reduced team could not close fast enough.</p>
+  </div>
+</div>
+
+<p>Relay Financial's story is the one that stings most. At the 2027 CES Convention in Las Vegas, its CEO — a former Block product manager — was asked how the company had moved so quickly from founding to a product that was already threatening its former employer. His answer was unscripted and has since been quoted in half a dozen business school case studies:</p>
+
+<div class="source-quote">
+  <p>"It was a no-brainer. All those engineers sitting around the cafeteria saying 'if only' — if only we had the runway to build this, if only leadership would greenlight that. Well. Here we are, with all those if-only products. Turns out the only thing standing between an idea and a company was someone telling us we no longer had jobs."</p>
+  <div class="attribution">— CEO, Relay Financial &nbsp;·&nbsp; CES Convention, Las Vegas, January 2027</div>
+</div>
+
+<p>Relay went public last month. Its market cap on day one exceeded what Block's stock lost in the eighteen months following the layoff announcement.</p>
+
+<div class="stat-row">
+  <div class="stat-cell">
+    <span class="stat-num red">−38%</span>
+    <div class="stat-label">Block stock from<br>post-layoff peak<br>to March 2029</div>
+  </div>
+  <div class="stat-cell">
+    <span class="stat-num amber">9</span>
+    <div class="stat-label">Fintech startups<br>founded by former<br>Block employees</div>
+  </div>
+  <div class="stat-cell">
+    <span class="stat-num green">31</span>
+    <div class="stat-label">Major products launched<br>by Block competitors<br>in 30 months after layoffs</div>
+  </div>
+</div>
+
+<div class="section-label">The Closing Thought</div>
+<h2>The Formula Had a Variable Nobody Counted</h2>
+
+<p>Dorsey's equation — 100 people plus AI equals 1,000 people — was not wrong about what AI can do. It was wrong about what it was replacing. AI can make engineers faster. It cannot make them curious. It can optimize a product. It cannot imagine the next one. The variable the formula left out was judgment — the accumulated, experience-built, friction-tested human capacity to look at a problem nobody has named yet and decide it's worth solving.</p>
+
+<p>Block didn't automate its way to a better company. It automated its way to a smaller one — and handed the difference to nine startups and every competitor in fintech who was paying attention. Bad ideas, it turns out, don't get better with automation. They just arrive at their consequences faster.</p>
+
+<p>The deeper argument — what this means for careers, for education, for how an entire generation navigates an AI-saturated world — is what the series below is for.</p>
+
+<p style="font-family:'Newsreader',serif; font-size:1.15rem; font-style:italic; color:var(--ice); line-height:1.6; font-weight:300; border-left: 3px solid var(--amber); padding-left: 20px; margin: 32px 0;"><strong style="font-style:normal;">You can't be replaced — if you're Full of Thought.</strong><br>The future of AI isn't a world with less humans. It's one with more Thought-Full ones.</p>
+
+<!-- SERIES CTA -->
+<div class="series-cta">
+  <div class="cta-label">The Full Argument — A Five-Part Series</div>
+  <h3>The Thought-Full Economy</h3>
+  <p style="font-family:'Newsreader',serif; font-style:italic; font-size:1.1rem; color:var(--ice); margin-bottom:8px; font-weight:300;">You can't be replaced — if you're Full of Thought.</p>
+  <p style="font-family:'Newsreader',serif; font-style:italic; font-size:0.95rem; color:rgba(221,238,255,0.65); margin-bottom:20px; font-weight:300;">The future of AI isn't a world with less humans. It's one with more Thought-Full ones.</p>
+  <p>The Block story is one chapter of a longer argument about AI, careers, critical thinking, and what it means to build a working life that compounds rather than expires. The full series covers the landscape, the diagnosis, the remedy, the ally framework, and the questions every student and professional should be asking right now.</p>
+
+  <div class="series-parts">
+    <div class="series-part">
+      <span class="part-num">01</span>
+      <span class="part-title">The Landscape</span>
+      <span class="part-desc">What AI is replacing and why the fear is misdirected</span>
+    </div>
+    <div class="series-part">
+      <span class="part-num">02</span>
+      <span class="part-title">The Diagnosis</span>
+      <span class="part-desc">How a generation outsourced its thinking</span>
+    </div>
+    <div class="series-part">
+      <span class="part-num">03</span>
+      <span class="part-title">The Remedy</span>
+      <span class="part-desc">Apps and habits that rebuild critical thinking</span>
+    </div>
+    <div class="series-part">
+      <span class="part-num">04</span>
+      <span class="part-title">The Ally</span>
+      <span class="part-desc">From the OR to a global pandemic — AI as amplifier</span>
+    </div>
+    <div class="series-part">
+      <span class="part-num">05</span>
+      <span class="part-title">The Questions</span>
+      <span class="part-desc">What to demand from your college before you sign</span>
+    </div>
+  </div>
+
+  <a class="cta-button" href="ai-article-series.html">Read the Full Series →</a>
+
+  <div style="margin-top:36px; border-top:1px solid rgba(255,255,255,0.08); padding-top:28px;">
+    <p style="font-family:'Newsreader',serif; font-size:1.15rem; font-style:italic; color:var(--ice); line-height:1.5; font-weight:400; margin-bottom:12px;">You can't be replaced — if you're Full of Thought.</p>
+    <p style="font-family:'Newsreader',serif; font-size:1rem; font-style:italic; color:var(--amber); line-height:1.5; font-weight:300; margin-bottom:0;">The future of AI isn't a world with less humans. It's one with more Thought-Full ones.</p>
+  </div>
+</div>
+
+</div><!-- end article-body -->
+
+<footer>
+  Signal/Loss &nbsp;·&nbsp; Business &amp; Technology Analysis &nbsp;·&nbsp; Speculative Retrospective &nbsp;·&nbsp; March 2029 (Written 2026) &nbsp;·&nbsp; Part of <em>The Thought-Full Economy</em> series &nbsp;·&nbsp; All post-2026 figures are illustrative projections &nbsp;·&nbsp; Companion: <em>The Multiplication Principle</em>
+</footer>
+
+</body>
+</html>
